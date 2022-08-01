@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Microservice</title>
+
+</head>
+<body>
+    <h1>Posts</h1>
+
+    {% for i in data %}
+    <p>User ID:{{ i.user_id }}</p>
+    <p>Post n.: {{ i.id }}</p>
+    <p>Title: {{ i.title }}</p>
+    <p>Body: {{ i.body }}</p>
+    <hr>
+    {% endfor %}
+
+    {% for e in error %}
+    <p>Error
+        Message: {{ e.message }}</p>
+    {% endfor %}
+
+</body>
+</html>
