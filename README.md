@@ -39,6 +39,10 @@ python manage.py migrate
 
 The server should be running with the database migrated
 
+## API Documentation
+
+[API Documentation](https://app.swaggerhub.com/apis/adambarantomik/AMCEF-MSWI/1.0.0#/servers)
+
 ## Author
 
 * **Adam Baran-Tomik**

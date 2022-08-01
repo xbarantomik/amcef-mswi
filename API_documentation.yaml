@@ -1,0 +1,223 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: 'AMCEF - microservice API'
+  contact:
+    name: Adam Baran-Tomik
+    email: a.baran.tomik@gmail.com
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/adambarantomik/AMCEF-MSWI/1.0.0
+tags:
+  - name: post
+    description: Operations to moderate posts
+paths:
+  '/post/{userId}':
+    get:
+      tags:
+        - post
+      summary: Find posts by User ID
+      description: >-
+        Returns all post by the selected User with ID `userId`
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the User
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: >-
+            Either `userId` was not an integer or User made no posts
+  '/post/{id}':
+    get:
+      tags:
+        - post
+      summary: Find post by Post ID
+      description: >-
+        Returns a post with ID (`id`)
+        
+      
+        If the post ID (`id`) doesn't match parameters `id` and `original_post_id` of the created posts and is lesser than 100, post with that ID will be copied from External API and created as new with the ID saved as `original_post_id`
+        
+        
+      parameters:
+        - name: id
+          in: path
+          description: ID of the post
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+        '201':
+          description: New post created and successful operation
+        '400':
+          description: >-
+            Parameter `id` wasn't numerical, greater than 0 or was greated than 100 and the post didn't exist yet
+  '/post/delPost/{post_id}':
+    delete:
+      tags:
+        - post
+      summary: Delete post
+      description: >-
+        Deletes post by post ID `post_id`
+      parameters:
+        - name: post_id
+          in: path
+          description: ID of the post that needs to be deleted
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description:  >-
+            Post with `post_id` was deleted
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  id: 
+                    type: integer
+                    example: 81
+                  message: 
+                    type: string
+                    example: post deleted successfully
+        '400':
+          description: >-
+            Post with `post_id` was not found
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  id: 
+                    type: integer
+                    example: 47
+                  message: 
+                    type: string
+                    example: post not found
+  /post/addPost:
+    post:
+      tags:
+        - post
+      summary: Create new Post
+      description: >-
+        This can only be done by submiting a valid User ID. That is when `user_id` matches with
+        one of the Users `id` from external API ('https://jsonplaceholder.typicode.com/')
+        
+        
+        Post object:
+          - `id`: will be assigned a unique number
+          - `original_post_id`: will be null
+          - `user_id`: obtained from Request body
+          - `title`: obtained from Request body
+          - `body`: obtained from Request body
+      responses:
+        '201':
+          description: New post created
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  id: 
+                    type: integer
+                    example: 39
+                  message: 
+                    type: string
+                    example: new post created
+        '400':
+          description: >-
+            Either parameters are missing in Request body or `user_id` is not an integer
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    example: user_id is not integer
+        '401':
+          description: >-
+            No User ID from External API matches with `user_id`
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  user_id: 
+                    type: integer
+                    example: 19
+                  message: 
+                    type: string
+                    example: non valid user_id
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                title:
+                  type: string
+                body:
+                  type: string
+        required: true
+  /post/putPost:
+    put:
+      tags:
+        - post
+      summary: Update an existing Post
+      description:  >-
+        Search is based on post ID (`id`)
+        
+        
+        Parameters `title` and `body` can be changed
+      responses:
+        '200':
+          description: >-
+            Post was updated
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    example: post updated successfully
+        '400':
+          description: >-
+            Either parameters are missing in Request body or post with ID `id` cannot be found
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  id: 
+                    type: integer
+                    example: 17
+                  message: 
+                    type: string
+                    example: post not found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                title:
+                  type: string
+                body:
+                  type: string
+        required: true
